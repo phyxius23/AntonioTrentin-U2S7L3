@@ -1,0 +1,106 @@
+// https://striveschool-api.herokuapp.com/books
+
+fetch ("https://striveschool-api.herokuapp.com/books")
+   .then(response => response.json())
+   .then(library => {
+
+      let books = document.querySelector('#library');
+      let cart = document.querySelector('#cart ul');
+      let counter = localStorage.length; //inizializzo il counter con il numero di elementi di localStorage
+
+      // se localStorage ha elementi li aggiungo subito al carrello
+      if (localStorage.length) {
+         for (let i = 0; i < localStorage.length; i++) {
+            createListItem(i);
+         }
+      }
+
+      library.forEach(book => {
+
+         // creo l'elemento .col
+         const col = document.createElement('div');
+         col.classList.add('col');
+
+         // creo l'elemento .card
+         const card = document.createElement('div');
+         card.classList.add('card');
+
+         // creo l'elemento img e gli assegno la src
+         const img = document.createElement('img');
+         img.src = book.img;
+         
+         // creo l'elemento .card-body
+         const cardBody = document.createElement('div');
+         cardBody.classList.add('card-body');
+         
+         // creo l'elemento h5
+         const title = document.createElement('h5');
+         title.classList.add('card-title');
+         title.innerText = book.title;
+         
+         // creo l'elemento p
+         const price = document.createElement('p');
+         price.classList.add('card-text');
+         price.innerText = book.price
+         
+         // creo l'elemento button (Scarta)
+         const btn = document.createElement('button');
+         btn.classList.add('btn', 'btn-danger', 'me-2');
+         btn.setAttribute('id', 'btn');
+         btn.innerText = 'Scarta';
+
+         // creo l'elemento button (Compra)
+         const btnBuy = document.createElement('a');
+         btnBuy.classList.add('btn', 'btn-success');
+         btnBuy.setAttribute('href', '#');
+         btnBuy.innerText = 'Compra ora';
+
+         cardBody.appendChild(title);
+         cardBody.appendChild(price);
+         cardBody.appendChild(btn);
+         cardBody.appendChild(btnBuy);
+
+         card.appendChild(img);
+         card.appendChild(cardBody);
+
+         col.appendChild(card);
+
+         // rimuovo la colonna che corrisponde al button cliccato
+         col.querySelector('#btn').onclick = ()=> {
+            col.remove();
+         }
+
+         // add book in cart/localStorage
+         col.querySelector('.btn-success').onclick = ()=> {
+
+            // salvo chiave/valore in localStorage
+            localStorage.setItem(counter, book.title);
+            
+            // richiamo Fn che crea un list item del libro appena aggiunto al carrello
+            createListItem(counter);
+
+            // incremento il counter
+            counter++
+         }
+         books.appendChild(col); //appendo la colonna all'elemento library (books)
+      });
+
+   })
+   .catch(error => console.log("CATCH", error));
+
+// Fn che crea un list item contenente il valore appena salvato nel localStorage
+const createListItem = function (index) {
+   let li = document.createElement('li');
+   let textLi = document.createTextNode(localStorage.getItem(index));
+
+   li.appendChild(textLi);
+   cart.appendChild(li);
+}
+
+// Fn che salva nel localStorage la coppia chiave/valore
+// NON FUNZIONA!!!!
+const saveName = function () {
+   // let indexLocalStorage = localStorage.length + 1;
+   localStorage.setItem(counter++, book.title); //salvo in localStorage la coppia chiave/valore name:inputName.value
+   createListItem(indexLocalStorage);
+}
