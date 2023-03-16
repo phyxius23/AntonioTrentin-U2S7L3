@@ -157,8 +157,12 @@ fetch("https://striveschool-api.herokuapp.com/books")
 
       // rimuovo il titolo dal carrello e dal localStorage
       let buttonsRemoveCart = document.querySelectorAll('#btnRemove');
+
       buttonsRemoveCart.forEach(button => {
-         button.onclick = () => {
+
+         // button.onclick = () => {
+         button.addEventListener('click', function(){
+
             let btnAsin = button.closest('li').dataset.asin; // recupero il valore dato da asin 
             let arrayRemove = JSON.parse(localStorage.getItem("cart")); // recupero il json dal localStorage e lo converto in obj
             let index = arrayRemove.findIndex(e => e.asin === btnAsin); // cerco il valore dato da asin all'interno dell'obj e ritorno l'index
@@ -169,11 +173,12 @@ fetch("https://striveschool-api.herokuapp.com/books")
             // rimuovo l'elemento li
             button.closest('li').remove();
 
+            // se localStorage.cart è vuoto lo rimuovo
             if (!JSON.parse(localStorage.getItem("cart")).length) {
                localStorage.removeItem("cart");
             }
       
-         }
+         })
       })
 
       // if (!JSON.parse(localStorage.getItem("cart")).length) {
